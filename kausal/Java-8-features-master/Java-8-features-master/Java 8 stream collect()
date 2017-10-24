@@ -1,0 +1,173 @@
+Java 8 Stream collect() Example
+
+By kaushalkr, October 1, 2017
+On this page we will provide java 8 Stream collect() example. This method performs mutable reduction operation on the stream elements. Stream elements are incorporated into the result by updating it instead of replacing. Stream.collect() works with one argument as collector or three arguments as supplier, accumulator and combiner using lambda expression. Here we will discuss the example of both overloading function.
+
+1.      Stream.collect() using Supplier, Accumulator and Combiner
+The syntax of Stream.collect() using supplier, accumulator, combiner is as follows. 
+
+collect(Supplier supplier, BiConsumer accumulator, BiConsumer combiner)
+
+
+supplier : It creates a new result container which will be populated by accumulator and combiner and finally it will be returned by collect() method. In parallel processing the Supplier function will be called multiple times that will return fresh value each time. 
+accumulator : It incorporates additional element into the result. 
+combiner : It combines two values that must be compatible with accumulator. Combiner works in parallel processing. 
+ 
+StreamCollect.java
+package com.concretepage;
+import java.util.Arrays;
+import java.util.List;
+public class StreamCollect {
+	public static void main(String[] args) {
+	    List<String> list = Arrays.asList("Mukesh", "Vishal", "Amar");
+	    String result = list.parallelStream().collect(StringBuilder::new,
+	    		(response, element) -> response.append(" ").append(element),
+	    		(response1, response2) -> response1.append(",").append(response2.toString()))
+	    		.toString();
+	    System.out.println("Result: " + result);
+	}
+} 
+
+Output
+Result:  Mukesh, Vishal, Amar If we use list.stream() then the output will be different because it is not parallel processing and so nothing to combine.
+Result:  Mukesh Vishal Amar 
+
+2.      Stream.collect() using Collector
+Stream.collect() also accepts single argument. 
+
+collect(Collector collector)
+
+It is useful to perform many operations like summation, grouping, joining etc. Find the example for summation. 
+
+SumOfListDemo.java
+package com.concretepage;
+import java.util.Arrays;
+import java.util.IntSummaryStatistics;
+import java.util.List;
+import java.util.stream.Collectors;
+public class SumOfListDemo {
+    public static void main(String[] args) {
+      List<Integer> list = Arrays.asList(23, 43, 12, 25);	  
+  	  IntSummaryStatistics stats = list.stream()
+  			     .collect(Collectors.summarizingInt(i -> i + i));
+  	  System.out.println("Sum:"+stats.getSum());
+   }
+} 
+
+Output
+Sum:206 
+
+3.      Stream.collect() with Collectors.joining()
+
+package com.concretepage;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+public class JoiningExample {
+	public static void main(String[] args) {
+		List<String> list = Arrays.asList("Ram","Shyam","Shiv","Mahesh");
+		String result=  list.stream().collect(Collectors.joining(", "));
+		System.out.println("Joining Result: "+ result);
+	}
+}
+
+Output
+Joining Result: Ram, Shyam, Shiv, Mahesh 
+
+4.      Stream.collect() with Collectors.averagingInt()
+
+AveragingIntExample.java
+package com.concretepage;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+public class AveragingIntExample {
+    public static void main(String[] args) {
+        List<Integer> list = Arrays.asList(1,2,3,4);
+        Double result = list.stream().collect(Collectors.averagingInt(v->v*2));
+        System.out.println("Average: "+result);
+    }
+}
+
+Output
+Average: 5.0 
+
+5.      Stream.collect() with Collectors.counting()
+
+CountingExample.java
+package com.concretepage;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+public class CountingExample {
+    public static void main(String[] args) {
+       List<Integer> list = Arrays.asList(1,2,3,4);
+       long result=  list.stream().collect(Collectors.counting());
+       System.out.println("Count: "+ result);
+    }
+} 
+
+Output
+Count: 4 
+
+6.      Stream.collect() with Collectors.toList()
+
+package com.concretepage;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+public class ToListExample {
+    public static void main(String[] args) {
+    	String[] strArray = {"AA", "BB", "CC"};
+        List<String> list = Arrays.stream(strArray).collect(Collectors.toList());
+        list.forEach(s->System.out.println(s));
+     }
+}
+
+Output
+AA
+BB
+CC 
+
+
+7.      Stream.collect() with Collectors.toMap()
+
+package com.concretepage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+public class ToMapExample {
+	public static void main(String[] args) {
+		List<Person> list = new ArrayList<>();
+		list.add(new Person(100, "Mohan"));
+		list.add(new Person(200, "Sohan"));
+		list.add(new Person(300, "Mahesh"));
+		Map<Integer, String> map = list.stream()
+				.collect(Collectors.toMap(Person::getId, Person::getName));
+		map.forEach((x, y) -> System.out.println("Key: " + x +", value: "+ y));
+	}
+}
+
+Person.java
+package com.concretepage;
+public class Person {
+	private Integer id;
+	private String name;
+	public Person(Integer id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public String getName() {
+		return name;
+	}
+}
+
+Output
+Key: 100, value: Mohan
+Key: 200, value: Sohan
+Key: 300, value: Mahesh 
+

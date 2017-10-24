@@ -1,0 +1,101 @@
+Java 8 Consumer Interface and forEach Loop
+
+By kaushalkr, October23, 2017
+On this page we will learn Consumer functional Interface and forEach loop introduced in java 8. Consumer functional interface is used as a lambda expression assignment. accept(T t) is functional interface method which accepts only one argument and returns void. The java 8 collection has forEach loop that is called to iterate elements. Java 8 also provides consumer for primitive data types such as IntConsumer, LongConsumer and DoubleConsumer.
+Instantiate Consumer
+
+java.util.function.Consumer is a functional interface. It accepts an input and returns no result. We instantiate it as follows for the given object.
+Consumer<Student> style = (Student s) -> System.out.println("Name:"+s.name +" and Age:"+s.age); Here Student is a user class.
+forEach Loop
+List can be iterated with Consumer argument.
+list.forEach(style); If the containing class in the collection has a method to print data, we can use forEach as below.
+list.forEach(Student::printData); Lambda expression can also be used for printing values while iterating over collection using forEach.
+list.forEach(s -> s.printData());
+
+Consumer Example with forEach Loop 
+
+ConsumerDemo.java
+package com.concretepage.lambda;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+public class ConsumerDemo {
+   public static void main(String[] args) {
+        List<Student> list = new ArrayList();
+        list.add(new Student("Ram",20));
+        list.add(new Student("Shyam",22));
+        list.add(new Student("Kabir",18));
+        //Creating instance of Consumer functional interface
+        Consumer<Student> style = (Student s) -> System.out.println("Name:"+s.name +" and Age:"+s.age);
+        //first way using Consumer
+        list.forEach(style);
+        //second way using method reference 
+        list.forEach(Student::printData);
+        //third way using lambda expression
+        list.forEach(s -> s.printData());
+   }
+}
+
+Student.java
+package com.concretepage.lambda;
+public class Student {
+    public String name;
+    public int age;
+    public Student(String name,int age){
+        this.name = name;
+        this.age = age;
+    }
+    public void printData(){
+        System.out.println("Name:"+name + " age:"+age);
+    }
+} 
+
+Output
+Name:Ram and Age:20
+Name:Shyam and Age:22
+Name:Kabir and Age:18
+Name:Ram age:20
+Name:Shyam age:22
+Name:Kabir age:18
+Name:Ram age:20
+Name:Shyam age:22
+Name:Kabir age:18 
+
+
+Find the consumer classes for primitive data type. 
+IntConsumer : It accepts single int value. 
+LongConsumer : It accepts single long value. 
+DoubleConsumer : It accepts single double value. 
+
+ConsumerWithPrimitiveDatatype.java
+package com.concretepage;
+import java.util.Arrays;
+import java.util.function.DoubleConsumer;
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
+public class ConsumerWithPrimitiveDatatype {
+	public static void main(String[] args) {
+		System.out.println("--IntConsumer--");
+		int[] intNum = {3,5,6,10,15};
+		IntConsumer intCon = i -> System.out.print(i+" ");
+		Arrays.stream(intNum).forEach(intCon);
+		
+		System.out.println("\n--LongConsumer--");
+		long[] longNum = {13l,9l,6l,10l,15l};
+		LongConsumer longCon = l -> System.out.print(l+" ");
+		Arrays.stream(longNum).forEach(longCon);	
+
+		System.out.println("\n--DoubleConsumer--");
+		double[] dbNum = {13.4d,9.1d,6.5d,10.3d,15.3d};
+		DoubleConsumer dbCon = d -> System.out.print(d+" ");
+		Arrays.stream(dbNum).forEach(dbCon);	
+	}
+} 
+
+Output
+--IntConsumer--
+3 5 6 10 15 
+--LongConsumer--
+13 9 6 10 15 
+--DoubleConsumer--
+13.4 9.1 6.5 10.3 15.3

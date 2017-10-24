@@ -1,0 +1,223 @@
+On this page we will provide java 8 Stream sorted() example. We can sort the stream in natural ordering as well as ordering provided by Comparator. In java 8 Comparator can be instantiated using lambda expression. We can also reverse the natural ordering as well as ordering provided by Comparator. Natural ordering uses the ordering provided by Comparable which must be implemented by the class whose instances are the stream elements. Here on this page we will sort List, Map and Set using java 8 stream sorted() method.
+
+Stream sorted() using Natural Ordering, Comparator and Reverse Ordering
+Find the syntax of sorted() method. 
+
+1. sorted(): It sorts the elements of stream using natural ordering. The element class must implement Comparable interface. 
+
+2. sorted(Comparator<? super T> comparator): Here we create an instance of Comparator using lambda expression. We can sort the stream elements in ascending and descending order. 
+
+The following line of code will sort the list in natural ordering.
+list.stream().sorted() To reverse the natural ordering Comparator provides reverseOrder() method. We use it as follows.
+list.stream().sorted(Comparator.reverseOrder()) The following line of code is using Comparator to sort the list.
+list.stream().sorted(Comparator.comparing(Student::getAge)) To reverse the ordering, Comparator provides reversed() method. We use this method as follows.
+list.stream().sorted(Comparator.comparing(Student::getAge).reversed())
+
+1.  Stream sorted() with List
+Here we are sorting a List of objects of Student class. First we will sort by natural ordering and then using Comparator. We will reverse both ordering natural ordering as well as ordering provided by Comparator in our example. 
+
+SortList.java
+package com.concretepage;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+public class SortList {
+	public static void main(String[] args) {
+		List<Student> list = new ArrayList<Student>();
+		list.add(new Student(1, "Mahesh", 12));
+		list.add(new Student(2, "Suresh", 15));
+		list.add(new Student(3, "Nilesh", 10));
+		
+		System.out.println("---Natural Sorting by Name---");
+		List<Student> slist = list.stream().sorted().collect(Collectors.toList());
+		slist.forEach(e -> System.out.println("Id:"+ e.getId()+", Name: "+e.getName()+", Age:"+e.getAge()));
+		
+		System.out.println("---Natural Sorting by Name in reverse order---");
+		slist = list.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+		slist.forEach(e -> System.out.println("Id:"+ e.getId()+", Name: "+e.getName()+", Age:"+e.getAge()));		
+		
+		System.out.println("---Sorting using Comparator by Age---");
+		slist = list.stream().sorted(Comparator.comparing(Student::getAge)).collect(Collectors.toList());
+		slist.forEach(e -> System.out.println("Id:"+ e.getId()+", Name: "+e.getName()+", Age:"+e.getAge()));
+		
+		System.out.println("---Sorting using Comparator by Age with reverse order---");
+		slist = list.stream().sorted(Comparator.comparing(Student::getAge).reversed()).collect(Collectors.toList());
+		slist.forEach(e -> System.out.println("Id:"+ e.getId()+", Name: "+e.getName()+", Age:"+e.getAge()));
+	}
+} 
+
+Student.java
+package com.concretepage;
+public class Student implements Comparable<Student> {
+	private int id;
+	private String name;
+	private int age;
+	public Student(int id, String name, int age) {
+		this.id = id;
+		this.name = name;
+		this.age = age;
+	}
+	public int getId() {
+		return id;
+	}
+	public String getName() {
+		return name;
+	}
+	public int getAge() {
+		return age;
+	}
+	@Override
+	public int compareTo(Student ob) {
+		return name.compareTo(ob.getName());
+	}
+        @Override
+        public boolean equals(final Object obj) {
+          if (obj == null) {
+             return false;
+          }
+          final Student std = (Student) obj;
+          if (this == std) {
+             return true;
+          } else {
+             return (this.name.equals(std.name) && (this.age == std.age));
+          }
+        }
+        @Override
+        public int hashCode() {
+          int hashno = 7;
+          hashno = 13 * hashno + (name == null ? 0 : name.hashCode());
+          return hashno;
+        }	
+}
+
+Output
+---Natural Sorting by Name---
+Id:1, Name: Mahesh, Age:12
+Id:3, Name: Nilesh, Age:10
+Id:2, Name: Suresh, Age:15
+---Natural Sorting by Name in reverse order---
+Id:2, Name: Suresh, Age:15
+Id:3, Name: Nilesh, Age:10
+Id:1, Name: Mahesh, Age:12
+---Sorting using Comparator by Age---
+Id:3, Name: Nilesh, Age:10
+Id:1, Name: Mahesh, Age:12
+Id:2, Name: Suresh, Age:15
+---Sorting using Comparator by Age with reverse order---
+Id:2, Name: Suresh, Age:15
+Id:1, Name: Mahesh, Age:12
+Id:3, Name: Nilesh, Age:10 
+
+
+2.    Stream sorted() with Set
+Here we are sorting the Set of objects of Student class. This class must override equals() and hashCode() methods to identify unique elements. For natural ordering Student class needs to implement Comparable interface. In our example we will sort our Set using natural ordering as well as ordering provided by Comparator. 
+
+SortSet.java
+package com.concretepage;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
+public class SortSet {
+	public static void main(String[] args) {
+		Set<Student> set = new HashSet<Student>();
+		set.add(new Student(1, "Mahesh", 12));
+		set.add(new Student(2, "Suresh", 15));
+		set.add(new Student(3, "Nilesh", 10));
+		
+		System.out.println("---Natural Sorting by Name---");
+		set.stream().sorted().forEach(e -> System.out.println("Id:"
+		          + e.getId()+", Name: "+e.getName()+", Age:"+e.getAge()));
+		
+		System.out.println("---Natural Sorting by Name in reverse order---");
+		set.stream().sorted(Comparator.reverseOrder()).forEach(e -> System.out.println("Id:"
+		          + e.getId()+", Name: "+e.getName()+", Age:"+e.getAge()));		
+		
+		System.out.println("---Sorting using Comparator by Age---");
+		set.stream().sorted(Comparator.comparing(Student::getAge))
+		  .forEach(e -> System.out.println("Id:"+ e.getId()+", Name: "+e.getName()+", Age:"+e.getAge()));
+		
+		System.out.println("---Sorting using Comparator by Age in reverse order---");
+		set.stream().sorted(Comparator.comparing(Student::getAge).reversed())
+		  .forEach(e -> System.out.println("Id:"+ e.getId()+", Name: "+e.getName()+", Age:"+e.getAge()));
+	}
+}
+
+Output
+---Natural Sorting by Name---
+Id:1, Name: Mahesh, Age:12
+Id:3, Name: Nilesh, Age:10
+Id:2, Name: Suresh, Age:15
+---Natural Sorting by Name in reverse order---
+Id:2, Name: Suresh, Age:15
+Id:3, Name: Nilesh, Age:10
+Id:1, Name: Mahesh, Age:12
+---Sorting using Comparator by Age---
+Id:3, Name: Nilesh, Age:10
+Id:1, Name: Mahesh, Age:12
+Id:2, Name: Suresh, Age:15
+---Sorting using Comparator by Age in reverse order---
+Id:2, Name: Suresh, Age:15
+Id:1, Name: Mahesh, Age:12
+Id:3, Name: Nilesh, Age:10 
+
+3.     Stream sorted() with Map
+Here we are sorting a Map by key as well as value. 
+
+SortMap.java
+package com.concretepage;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+public class SortMap {
+	public static void main(String[] args) {
+		Map<Integer, String> map = new HashMap<>();
+		map.put(15, "Mahesh");
+		map.put(10, "Suresh");
+		map.put(30, "Nilesh");
+		
+		System.out.println("---Sort by Map Value---");
+	        map.entrySet().stream().sorted(Comparator.comparing(Map.Entry::getValue))
+	          .forEach(e -> System.out.println("Key: "+ e.getKey() +", Value: "+ e.getValue()));
+
+		System.out.println("---Sort by Map Key---");
+	        map.entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey))
+	          .forEach(e -> System.out.println("Key: "+ e.getKey() +", Value: "+ e.getValue()));
+	}
+}
+
+Output
+---Sort by Map Value---
+Key: 15, Value: Mahesh
+Key: 30, Value: Nilesh
+Key: 10, Value: Suresh
+---Sort by Map Key---
+Key: 10, Value: Suresh
+Key: 15, Value: Mahesh
+Key: 30, Value: Nilesh Here we are sorting a map whose values are custom objects. 
+
+SortMapOfCustomObject.java
+package com.concretepage;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+public class SortMapOfCustomObject {
+	public static void main(String[] args) {
+		Map<Integer, Student> map = new HashMap<>();
+		map.put(1, new Student(1, "Mahesh", 12));
+		map.put(2, new Student(2, "Suresh", 15));
+		map.put(3, new Student(3, "Nilesh", 10));
+                //Map Sorting by Value i.e student's natural ordering i.e by name
+	        map.entrySet().stream().sorted(Comparator.comparing(Map.Entry::getValue))
+	    	.forEach(e -> {
+				Integer key = (Integer)e.getKey();
+				Student std = (Student)e.getValue();
+	    		System.out.println("Key: " + key +", value: ("+ std.getId() +", "+ std.getName()+", "+ std.getAge()+")"); 
+	    	});
+	}
+} 
+
+Output
+Key: 1, value: (1, Mahesh, 12)
+Key: 3, value: (3, Nilesh, 10)
+Key: 2, value: (2, Suresh, 15)

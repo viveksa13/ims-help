@@ -1,0 +1,152 @@
+Java 8 Stream map() Example
+By kaushalkr, October 04, 2017
+On this page we will provide java 8 Stream map() example. It returns a Stream instance processed by a given Function. map() returns the stream of objects and to get the stream of primitive data type such as IntStream, LongStream and DoubleStream, java 8 Stream provides the method as mapToInt(), mapToLong() and mapToDouble() respectively.
+
+Stream map() with Function
+The syntax of Stream.map() method is as follows. 
+
+map(Function mapper)
+
+We need to pass Function instance as lambda expression. This method returns Stream instance that has the result processed by given Function. This is an intermediate operation.
+
+1.      Convert Map to List using Stream map()
+Here we will convert a HashMap into a List of objects using Stream.map() as an intermediate operation. 
+
+MapToList.java
+package com.concretepage;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+public class MapToList {
+	public static void main(String[] args) {
+		Map<Integer, String> map = new HashMap<>();
+		map.put(111, "Lalkrishna");
+		map.put(154, "Atal");		
+		map.put(30, "Narendra");
+		map.put(200, "Amit");
+		
+		List<User> list = map.entrySet().stream().sorted(Comparator.comparing(e -> e.getKey()))
+				.map(e -> new User(e.getKey(), e.getValue())).collect(Collectors.toList());
+
+		list.forEach(l -> System.out.println("Id: "+ l.getId()+", Name: "+ l.getName()));		
+	}
+}
+class User {
+	private int id;
+	private String name;
+	public User(int id, String name) {
+		this.id = id; 
+		this.name = name;
+	}
+	public int getId() {
+		return id;
+	}
+	public String getName() {
+		return name;
+	}
+} 
+
+Output
+Id: 30, Name: Narendra
+Id: 111, Name: Lalkrishna
+Id: 154, Name: Atal
+Id: 200, Name: Amit 
+
+
+2.      Convert List to another List using Stream map()
+In this example we will convert a List of an object into another List of different object using Stream.map() as an intermediate operation. 
+
+ListToAnotherList.java
+package com.concretepage;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+public class ListToAnotherList {
+	public static void main(String[] args) {
+		Person p1 = new Person(1, "Mohan", "student");
+		Person p2 = new Person(2, "Sohan", "teacher");
+		Person p3 = new Person(3, "Dinesh", "student");
+		List<Person> personList = Arrays.asList(p1, p2, p3);
+		
+		List<Student> stdList = personList.stream().filter(p -> p.getPersonType().equals("student"))
+			.map(p -> new Student(p.getId(), p.getName()))
+			.collect(Collectors.toList());
+		
+		stdList.forEach(e -> System.out.println("Id:"+ e.getId()+ ", Name: "+ e.getName()));
+	}
+}
+
+class Person {
+	private int id;
+	private String name;
+	private String personType;
+	public Person(int id, String name, String personType) {
+		this.id = id;
+		this.name = name;
+		this.personType = personType;
+	}
+	public int getId() {
+		return id;
+	}
+	public String getName() {
+		return name;
+	}
+	public String getPersonType() {
+		return personType;
+	}
+}
+class Student {
+	private int id;
+	private String name;
+	public Student(int id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+	public int getId() {
+		return id;
+	}
+	public String getName() {
+		return name;
+	}
+} 
+
+Output
+Id:1, Name: Mohan
+Id:3, Name: Dinesh 
+
+3.      Stream mapToInt() Example
+Here we are providing the example of mapToInt() and in the same way we can do for mapToLong() and mapToDouble(). 
+
+MapToIntDemo.java
+package com.concretepage;
+import java.util.Arrays;
+import java.util.List;
+public class MapToIntDemo {
+	public static void main(String[] args) {
+		Employee e1 = new Employee(1, 20);
+		Employee e2 = new Employee(2, 15);
+		Employee e3 = new Employee(3, 30);
+		List<Employee> list = Arrays.asList(e1, e2, e3);
+		int sum = list.stream().mapToInt(e -> e.getAge()).sum();
+		System.out.println("Sum: "+ sum);
+	}
+}
+class Employee {
+	private int id;
+	private int age;
+	public Employee(int id, int age) {
+		this.id = id; 
+		this.age = age;
+	}
+	public int getId() {
+		return id;
+	}
+	public int getAge() {
+		return age;
+	}
+}
+
+Output
+Sum: 65

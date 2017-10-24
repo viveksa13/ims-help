@@ -1,0 +1,66 @@
+Java 8 BiConsumer, BiFunction and BiPredicate Example
+By kaushalkr, October 12, 2017
+On this page, we will learn java 8 BiConsumer, BiFunction and BiPredicate functional interface. All the three interface accepts two arguments. BiConsumer does not return any value but perform the defined operation. BiFunction returns a value. We define the data type for it while declaring BiFunction. BiPredicate performs the defined operation and returns boolean value. Find the example for how to use these functional interfaces in our code.
+
+BiConsumer
+java.util.function.BiConsumer is a java 8 functional interface. BiConsumer does not return value. It accepts two parameter as an argument. BiConsumer functional method is accept(Object, Object). This methods performs the operation defined by BiConsumer. 
+In our example we have declared a BiConsumer that will simply print the value of both parameter. To do this we have taken a map which has two parameter key and value. We will print the value of map with the help of BiConsumer. 
+
+
+BiConsumerDemo.java
+package com.concretepage.function;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
+public class BiConsumerDemo {
+   public static void main(String[] args) {
+       Map<Integer,String> map = new HashMap<>();
+       map.put(1, "A");
+       map.put(2, "B");
+       map.put(3, "C");
+       BiConsumer<Integer,String> biConsumer = (key,value) -> 
+						System.out.println("Key:"+ key+" Value:"+ value);
+       map.forEach(biConsumer);
+   }    
+} 
+
+Output will be as below.
+Key:1 Value:A
+Key:2 Value:B
+Key:3 Value:C 
+
+
+BiFunction
+java.util.function.BiFunction is a functional interface. BiFunction accepts two arguments and returns a value. While declaring BiFunction we need to tell what type of argument will be passed and what will be return type. We can apply our business logic with those two values and return the result. BiFunction has function method as apply(T t, U u) which accepts two argument. 
+BiFunctionDemo.java
+package com.concretepage.function;
+import java.util.function.BiFunction;
+public class BiFunctionDemo {
+    public static void main(String[] args) {
+        BiFunction<Integer, Integer, String> biFunction = (num1, num2) -> "Result:" +(num1 + num2);
+        System.out.println(biFunction.apply(20,25));
+    }    
+} 
+
+Output will be as below.
+Result:45 
+
+
+BiPredicate
+java.util.function.BiPredicate is a functional interface which accepts two argument and returns Boolean value. Apply business logic for the values passed as an argument and return the boolean value. BiPredicate functional method is test(Object, Object). Find the simple example for how to use BiPredicate. 
+BiPredicateDemo.java
+package com.concretepage.function;
+import java.util.function.BiPredicate;
+public class BiPredicateDemo {
+    public static void main(String[] args){
+      BiPredicate<Integer, String> condition = (i,s)-> i>20 && s.startsWith("R");
+      System.out.println(condition.test(10,"Ram"));
+      System.out.println(condition.test(30,"Shyam"));
+      System.out.println(condition.test(30,"Ram"));
+    }        
+} 
+
+Output will be as below.
+false
+false
+true

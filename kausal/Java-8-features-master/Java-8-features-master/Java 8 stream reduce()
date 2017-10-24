@@ -1,0 +1,137 @@
+Java 8 Stream reduce() Example
+
+By kaushalkr, September 26, 2017
+On this page we will provide java 8 Stream reduce() example. It is used to get the sum of numbers stored in List, Array etc. It can also concatenate the string stored in List and Array etc. Java 8 lambda Stream.reduce() method can perform many more reducing task as required. We are providing here some usability of Stream.reduce(). Find the examples.
+
+1.      Stream.reduce() with Accumulator
+Here we will pass BinaryOperator as accumulator. In case of numeric BinaryOperator, the start value will be 0. In case of string, the start value will be a blank string. 
+
+reduce(BinaryOperator accumulator)
+
+The method will return Optional instance. Find the example. 
+
+ReduceDemo1.java
+package com.concretepage;
+import java.util.Arrays;
+public class ReduceDemo1 {
+    public static void main(String[] args) {
+    	  int[] array = {23,43,56,97,32};
+    	  Arrays.stream(array).reduce((x,y) -> x+y).ifPresent(s -> System.out.println(s));
+    	  Arrays.stream(array).reduce(Integer::sum).ifPresent(s -> System.out.println(s));
+    	  Arrays.stream(array).reduce(StatisticsUtility::addIntData).ifPresent(s -> System.out.println(s));
+    }
+} 
+
+StatisticsUtility.java
+package com.concretepage;
+public class StatisticsUtility {
+	public static int addIntData(int num1, int num2) {
+		return num1 + num2;
+	}
+} 
+
+Output
+251
+251
+251 
+
+
+2.      Stream.reduce() with Identity and Accumulator
+Here will use an identity and accumulator. We will pass the identity as start value. 
+
+reduce(T identity, BinaryOperator<T> accumulator)
+
+ReduceDemo2.java
+package com.concretepage;
+import java.util.Arrays;
+public class ReduceDemo2 {
+    public static void main(String[] args) {
+    	  int[] array = {23,43,56,97,32};
+    	  //Set start value. Result will be start value + sum of array. 
+    	  int startValue = 100;
+    	  int sum = Arrays.stream(array).reduce(startValue, (x,y) -> x+y);
+    	  System.out.println(sum);
+    	  sum = Arrays.stream(array).reduce(startValue, Integer::sum);
+    	  System.out.println(sum);
+    	  sum = Arrays.stream(array).reduce(startValue, StatisticsUtility::addIntData);
+    	  System.out.println(sum);
+    }
+} 
+
+Output
+351
+351
+351 
+
+
+3.      Stream.reduce() with Identity, Accumulator and Combiner
+Here we will pass three arguments identity, accumulator and combiner in reduce() method. This method with these three arguments is used in parallel processing. Combiner works with parallel stream only, otherwise there is nothing to combine. 
+
+reduce(U identity, BiFunction<U,? super T,U> accumulator, BinaryOperator<U> combiner)
+ 
+ReduceDemo3.java
+package com.concretepage;
+import java.util.Arrays;
+import java.util.List;
+public class ReduceDemo3 {
+    public static void main(String[] args) {
+      List<Integer> list2 = Arrays.asList(2, 3, 4);
+      //Here result will be 2*2 + 2*3 + 2*4 that is 18. 
+      int res = list2.parallelStream().reduce(2, (s1, s2) -> s1 * s2, (p, q) -> p + q);
+      System.out.println(res);
+      
+      List<String> list1 = Arrays.asList("Mohan", "Sohan", "Ramesh");
+      String result = list1.parallelStream().reduce("-", (s1, s2) -> s1 + s2, (p, q) -> p + q);
+      System.out.println(result);
+   }
+} 
+
+Output
+18
+-Mohan-Sohan-Ramesh 
+
+4.      Reduce List and Array into a String
+
+ReduceToString.java
+package com.concretepage;
+import java.util.Arrays;
+import java.util.List;
+public class ReduceToString {
+	public static void main(String[] args) {
+		//Reduce Array to String.
+		String[] array = {"Mohan", "Sohan", "Mahesh"};
+		Arrays.stream(array).reduce((x, y) -> x +"," + y)
+		       .ifPresent(s -> System.out.println("Array to String: "+ s));
+		//Reduce List to String.
+		List<String> list = Arrays.asList("Mohan", "Sohan", "Mahesh");
+		list.stream().reduce((x, y) -> x +"," + y)
+			       .ifPresent(s -> System.out.println("List to String: "+ s));
+	}
+} 
+
+Output
+Array to String: Mohan,Sohan,Mahesh
+List to String: Mohan,Sohan,Mahesh 
+Reduce List and Array into Sum
+
+ReduceToSum.java
+package com.concretepage;
+import java.util.Arrays;
+import java.util.List;
+public class ReduceToSum {
+	public static void main(String[] args) {
+		//Reduce Array to sum.
+		int[] array = {30, 10, 20, 40};
+		int sum = Arrays.stream(array).reduce(0, (x, y) -> x + y);
+		System.out.println("Sum of Array: "+ sum);
+		//Reduce List to sum.
+		List<Integer> list = Arrays.asList(30, 10, 20, 40);
+		sum = list.stream().reduce(0, (x, y) -> x + y);
+		System.out.println("Sum of List: "+ sum);
+	}
+}
+
+Output
+Sum of Array: 100
+Sum of List: 100 
+

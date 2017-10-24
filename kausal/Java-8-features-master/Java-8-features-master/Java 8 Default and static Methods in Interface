@@ -1,0 +1,148 @@
+Java 8 Default and Static Method in Interface
+By kaushalkr, September 29, 2017
+Java 8 has introduced default method as well as static method that can be defined in interface. Default method is a normal java method but starts with default keyword and static method is declared as usual with static keyword.
+
+Why Default Method in Java Interface?
+A question comes in mind why java has introduced default methods in interface. Suppose a tractor manufacturer company has published standard interface to operate the tractor like how to take gear or break etc. Developer has developed different type of tractors implementing the standard tractor interface. What if company adds a new functionality in its standard interface like how to jump the tractor? Developer needs to do changes in their class to define new methods which is not a nice approach. Now we need here default method to handle this situation to avoid rewriting all classes implementing standard tractor interface. Define the default method in interface and it will be available in all classes implementing tractor interface.
+Why Static Method in Java Interface?
+Stating from Java 8, an interface can have static methods. A static method is associated with a class not with the object. Static method works as helper method. So if we declare static methods in interface, it is easy for us to organize our helper methods.
+
+1.      Scenario One: Default Method in Interface
+To understand using default method, I am creating an interface Village that has some method declarations and one default method. Default method starts with default keyword. By default all methods of interface will be public, so no need to use public keyword to declare and define methods in interface. 
+
+Village.java
+package com.concretepage;
+public interface Village {
+    void setNumOfPeople(int num);
+    void setName(String name);
+    default String getBusinessType(){
+        return "Most of the Village people do Farming";
+    }
+} Create a Location class that will implement Village interface. Default method will automatically be available in this class. 
+
+Location.java
+package com.concretepage;
+public class Location implements Village {
+    public int noOfPeople;
+    public String name;
+    @Override
+    public void setNumOfPeople(int n){
+        this.noOfPeople = n;
+    }
+    @Override
+    public void setName(String name){
+        this.name = name;
+    }
+} To test the scenario, create a Main class and access default method by Location object. 
+
+
+Main.java
+package com.concretepage;
+public class Main {
+    public static void main(String[] args){
+        Location lo = new Location();
+        System.out.println(lo.getBusinessType());
+    }    
+} 
+
+Output will be as below.
+Most of the Village people do Farming
+
+
+2.      Scenario Two: Static Method in Interface
+Now we can write static method in interface too. In our Village interface, I have declared getVillageId() as an static method. This static method can be accessed in default method as well. 
+Village.java
+package com.concretepage;
+public interface Village {
+    void setNumOfPeople(int num);
+    void setName(String name);
+    static int getVillageId(){
+        return 1;
+    }
+    default String getBusinessType(){
+        return "Business type is Farming  and village id:"+getVillageId();
+    }
+} I am doing some changes in Location class to use static method. We can use static method by interface name. 
+
+Location.java
+package com.concretepage;
+public class Location implements Village {
+    public int noOfPeople;
+    public String name;
+    @Override
+    public void setNumOfPeople(int n){
+        this.noOfPeople = n;
+    }
+    @Override
+    public void setName(String name){
+        this.name = name;
+    }
+    public int getLocationId(){
+        return Village.getVillageId();
+    }
+} Find the main method to test the static method. 
+
+Main.java
+package com.concretepage;
+public class Main {
+    public static void main(String[] args){
+        Location lo = new Location();
+        System.out.println(lo.getBusinessType());
+        System.out.println("Village id:"+Village.getVillageId());
+        System.out.println("Location Id:"+lo.getLocationId());
+    }    
+} 
+
+Run the Main class and check the output.
+Business type is Farming  and village id:1
+Village id:1
+Location Id:1
+
+
+3.    Scenario Three: Multiple Inheritance- Default Method with Same Name in Two Interfaces
+In multiple inheritance scenarios, where a class implements more than one interface, we need to check how default method behaves. Now I am creating one more interface that contains getBusinessType() as default method. 
+
+City.java
+package com.concretepage;
+public interface City {
+    void setName(String name);
+    void setArea(int area);
+    default String getBusinessType(){
+        return "Service";
+    }
+} 
+
+For multiple inheritances, Location class will implement Village and City interfaces both. As Village and City both contains default method with same name, so because of ambiguity, the Location class will force to define that default method explicitly in the class. The Location class will not compile until we define a method with same name as default method. 
+
+Location.java
+package com.concretepage;
+public class Location implements Village, City {
+    public int noOfPeople;
+    public String name;
+     public int area;
+    @Override
+    public void setNumOfPeople(int n){
+        this.noOfPeople = n;
+    }
+    @Override
+    public void setName(String name){
+        this.name = name;
+    }
+    @Override
+    public void setArea(int area){
+        this.area = area; 
+    }
+    @Override
+    public String getBusinessType(){
+        return "People do business like Farming and Service.";
+    }
+    public int getLocationId(){
+        return Village.getVillageId();
+    }
+} 
+
+Run the Main class and the output will be as below.
+People do business like Farming and Service.
+Village id:1
+Location Id:1
+
